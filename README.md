@@ -1,92 +1,111 @@
-a) FIFO (First In First Out): 
-
-AIM: A program to simulate FIFO Page Replacement Algorithm
-
-PROGRAM:
-
 #include<stdio.h>
+
+#include<string.h>
 
 #include<conio.h>
 
-void main()
+main()
 
 {
 
-int a[5],b[20],n,p=0,q=0,m=0,h,k,i,q1=1;
+char pn[10][10],t[10];
 
-char f='F';
+int arr[10],bur[10],star[10],finish[10],tat[10],wt[10],i,j,n,temp;
 
-clrscr();
+int totwt=0,tottat=0;
 
-printf("Enter the Number of Pages:");
+//clrscr();
+
+printf("Enter the number of processes:");
 
 scanf("%d",&n);
 
-printf("Enter %d Page Numbers:",n);
+for(i=0;i<n;i++)
+
+{
+
+printf("Enter the Process Name, Arrival Time & Burst Time:"); 
+
+scanf("%s%d%d",&pn[i],&arr[i],&bur[i]); }
 
 for(i=0;i<n;i++)
 
-scanf("%d",&b[i]);
+{
+
+for(j=0;j<n;j++)
+
+{
+
+if(arr[i]<arr[j])
+
+{
+
+temp=arr[i];
+
+arr[i]=arr[j];
+
+arr[j]=temp;
+
+temp=bur[i];
+
+bur[i]=bur[j];
+
+bur[j]=temp;
+
+strcpy(t,pn[i]);
+
+strcpy(pn[i],pn[j]);
+
+strcpy(pn[j],t);
+
+}
+
+}
+
+}
 
 for(i=0;i<n;i++)
 
-{if(p==0)
+{
+
+if(i==0)
+
+star[i]=arr[i];
+
+else
+
+star[i]=finish[i-1];
+
+wt[i]=star[i]-arr[i];
+
+finish[i]=star[i]+bur[i];
+
+tat[i]=finish[i]-arr[i];
+
+}
+
+printf("\nPName Arrtime Burtime WaitTime Start TAT Finish");
+
+for(i=0;i<n;i++)
 
 {
 
-if(q>=3)
+printf("\n%s\t%3d\t%3d\t%3d\t%3d\t%6d\t%6d",pn[i],arr[i],bur[i],wt[i],star[i],tat[i],finish[i
 
-q=0;
+]);
 
-a[q]=b[i];
+totwt+=wt[i];
 
-q++;
-
-if(q1<3)
-
-{
-
-q1=q;
+tottat+=tat[i];
 
 }
 
-}
+printf("\nAverage Waiting time:%f",(float)totwt/n);
 
-printf("\n%d",b[i]);
-
-printf("\t");
-
-for(h=0;h<q1;h++)
-
-printf("%d",a[h]);
-
-
-if((p==0)&&(q<=3))
-
-{
-
-printf("-->%c",f);
-
-m++;
-
-}
-
-p=0;
-
-for(k=0;k<q1;k++)
-
-{
-
-if(b[i+1]==a[k])
-
-p=1;
-
-}
-
-}
-
-printf("\nNo of faults:%d",m);
+printf("\nAverage Turn Around Time:%f",(float)tottat/n);
 
 getch();
+
+return 0;
 
 }
